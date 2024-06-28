@@ -5,8 +5,8 @@ import java.util.List;
 
 public class ServerRequest 
 {
-    public ObjectOutputStream outputStream;
-    public ObjectInputStream inputStream;
+    private  ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
     
     
     public ServerRequest(Socket socket) throws Exception
@@ -44,12 +44,14 @@ public class ServerRequest
         return (List<Post>)answer.data;
     }
 
-    public void addComment(Comment comment) throws Exception
+    public int addComment(Comment comment) throws Exception
     {
         Object[] arg = new Object[] {comment};
         Message message = new Message(1,"addComment", arg);
         outputStream.writeObject(message);
         outputStream.flush();
+        Message answer = (Message)inputStream.readObject();
+        return (int)answer.data;
     }
 
 
@@ -124,6 +126,16 @@ public class ServerRequest
         return (Integer)answer.data;
     }
 
+    public Integer getUserIDFromEmail(String email) throws Exception
+    {
+        Object[] arg = new Object[] {email};
+        Message message = new Message(1,"getUserIDFromEmail", arg);
+        outputStream.writeObject(message);
+        outputStream.flush();
+        Message answer = (Message)inputStream.readObject();
+        return (Integer)answer.data;
+    }
+
     public User getUserInfo(int userID) throws Exception
     {
         Object[] arg = new Object[] {userID};
@@ -132,6 +144,34 @@ public class ServerRequest
         outputStream.flush();
         Message answer = (Message)inputStream.readObject();
         return (User)answer.data;
+    }
+
+    public void addUser(User user, int password) throws Exception
+    {
+        Object[] arg = new Object[] {user, password};
+        Message message = new Message(1,"addUser", arg);
+        outputStream.writeObject(message);
+        outputStream.flush();
+    }
+
+
+    public void addUserEpisode(UserEpisode userEpisode) throws Exception
+    {
+        Object[] arg = new Object[] {userEpisode};
+        Message message = new Message(1,"addUserEpisode", arg);
+        outputStream.writeObject(message);
+        outputStream.flush();
+    }
+
+
+    public boolean  logIn(String email, int password) throws Exception
+    {
+        Object[] arg = new Object[] {email, password};
+        Message message = new Message(1,"logIn", arg);
+        outputStream.writeObject(message);
+        outputStream.flush();
+        Message answer = (Message)inputStream.readObject();
+        return (boolean)answer.data;
     }
 
     

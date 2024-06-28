@@ -1,5 +1,4 @@
 import java.net.Socket;
-import java.util.List;
 
 public class Main {
     
@@ -16,20 +15,11 @@ public class Main {
             socket = new Socket(ipAdress, port);
             System.out.println("Connected to Server :)");
 
-            ServerRequest serverRequest = new ServerRequest(socket);
-
-
-
             
+            UserInteface userInteface = new UserInteface();
 
-             
-            List<Post> posts = serverRequest.getPosts(10, 1, SortBy.VOTES);
-            for(Post post : posts)
-            {
-                System.out.println(post);
-            }
-
-        
+            userInteface.Start(socket);
+            
 
 
             
