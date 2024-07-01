@@ -65,9 +65,9 @@ public class ServerRequest
         return (Comment)answer.data;
     }
 
-    public List<Comment> getComments(int count, int postId, SortBy sortBy) throws Exception
+    public List<Comment> getComments(int count, int postId, SortBy sortBy, int offset) throws Exception
     {
-        Object[] arg = new Object[] {count, postId, sortBy};
+        Object[] arg = new Object[] {count, postId, sortBy, offset};
         Message message = new Message(1,"getComments", arg);
         outputStream.writeObject(message);
         outputStream.flush();
@@ -172,6 +172,16 @@ public class ServerRequest
         outputStream.flush();
         Message answer = (Message)inputStream.readObject();
         return (boolean)answer.data;
+    }
+
+    public List<Series> getJoinedSeries() throws Exception
+    {
+        Object[] arg = new Object[] {};
+        Message message = new Message(1,"getJoinedSeries", arg);
+        outputStream.writeObject(message);
+        outputStream.flush();
+        Message answer = (Message)inputStream.readObject();
+        return (List<Series>)answer.data;
     }
 
     

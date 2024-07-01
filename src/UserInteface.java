@@ -36,10 +36,12 @@ public class UserInteface
                         System.out.print("Username: ");
                         String username = reader.nextLine();
                         if(serverRequest.getUserIDFromUsername(username) == null)
-                        {
+                        {   
+                            System.out.println("Icon URL: ");
+                            String icon = reader.nextLine();
                             System.out.print("Description: ");
                             String description = reader.nextLine();
-                            User userToCreate = new User(username, email, description);
+                            User userToCreate = new User(username, email, icon, description);
                             serverRequest.addUser(userToCreate, password);
                             System.out.println(serverRequest.getUserIDFromEmail(email));
                             user = serverRequest.getUserInfo(serverRequest.getUserIDFromEmail(email));
@@ -76,7 +78,11 @@ public class UserInteface
                 System.out.print("> ");
                 String input = reader.nextLine().toLowerCase();
 
-                if(input.equals("exit")) break;
+                if(input.equals("exit")) 
+                {
+                    reader.close();
+                    break;
+                }
                 else if (input.length() >= 5 && input.substring(0, 5).equals("posts")) 
                 {
                     SortBy sortBy = SortBy.RANDOM;
@@ -85,17 +91,11 @@ public class UserInteface
                     {
                         switch (input.substring(6)) 
                         {
-                            case "random":
-                                sortBy = SortBy.RANDOM;
-                                break;
-                            case "newest":
-                                sortBy = SortBy.CREATION;
-                                break;
-                            case "top":
-                                sortBy = SortBy.VOTES;
-                                break;
-                            default:
-                                break;
+                            case "random" -> sortBy = SortBy.RANDOM;
+                            case "newest" -> sortBy = SortBy.CREATION;
+                            case "top" -> sortBy = SortBy.VOTES;
+                            default -> {
+                            }
                         }
                     }
                     
@@ -153,7 +153,7 @@ public class UserInteface
                     }
                     else
                     {
-                        List<Comment> comments = serverRequest.getComments(20, lastPost, SortBy.VOTES);
+                        List<Comment> comments = serverRequest.getComments(20, lastPost, SortBy.VOTES, 0);
                         List<Comment.CommentLevel> commentLevels = serverRequest.getAllSubComments(comments, 0);
                         printAllComments(commentLevels, serverRequest);
                     }

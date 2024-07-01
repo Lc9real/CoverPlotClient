@@ -2,8 +2,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
+import java.awt.event.*;
 import java.net.Socket;
 import java.util.List;
 import javax.swing.*;
@@ -17,29 +16,70 @@ public class UserWindow
     public static Socket socket;
     public static ServerRequest serverRequest;
     public static JPanel postPanel;
+    public static JScrollPane scrollPane;
+    private static Color lineColor = Color.GREEN;
+    private static Color backgroundColor = Color.BLACK;
 
     public static void main(String[] args) throws Exception
     {   
+        
         System.out.println("Starting Client...");
         socket = new Socket(ipAdress, port);
         System.out.println("Connected to Server :)");
         serverRequest = new ServerRequest(socket);
         
+        // TODO : Create the Series Panel
+        
 
-        JPanel seriesPanel = new JPanel();
-        seriesPanel.setBackground(Color.red);
-        seriesPanel.setPreferredSize(new Dimension(200, 300));
+        JPanel seriesMenuPanel = new JPanel();
+        seriesMenuPanel.setBackground(backgroundColor);
+        seriesMenuPanel.setForeground(lineColor);
+        seriesMenuPanel.setPreferredSize(new Dimension(200, 300));
+        seriesMenuPanel.setLayout(new BoxLayout(seriesMenuPanel, BoxLayout.Y_AXIS));
 
+        List<Series> joinedSeries = serverRequest.getJoinedSeries();
+        for(Series series: joinedSeries)
+        {
+            seriesMenuPanel.add(Box.createVerticalStrut(15));
+            seriesMenuPanel.add(new SeriesPanel(series));
+        }
+
+        JScrollPane seriesMenuScrollPane = new JScrollPane(seriesMenuPanel);
+
+        // TODO : Create the Top Menü Panel
+
+        JPanel topMenuePanel = new JPanel();
+        topMenuePanel.setBackground(Color.blue);
+        topMenuePanel.setPreferredSize(new Dimension(300, 50));
+        
         postPanel = new JPanel();
         postPanel.setLayout(new BoxLayout(postPanel, BoxLayout.Y_AXIS));
         
         postPanel.setBackground(Color.BLACK);
 
-        spawnInitialPosts();
-        
+
+        // TODO : Create User Login
+
+        // TODO : Add ability to change Episodes
+
+        // TODO : Add Series Display
+        // TODO : Add Search
+        // TODO : Add Image Posts
+        // TODO : Fix all Try statements and add Error statements
+        // TODO : Fix buge when Closing comment/post resizing bugs out
+
+
+
+
+
+        scrollPane = new JScrollPane(postPanel);
         
 
-        JScrollPane scrollPane = new JScrollPane(postPanel);
+
+        spawnInitialPosts();
+
+
+
         scrollPane.setBounds(0, 10, 550, 550);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
@@ -55,15 +95,17 @@ public class UserWindow
                 int value = scrollBar.getValue() + extent;
 
                 // Load more posts when scrollbar is near the bottom
-                if (value >= maximum - 200) {
+                if (value >= maximum - 200 && scrollPane.isVisible()) {
                     spawnNewPost();
                     postPanel.revalidate();
                     postPanel.repaint();
+                    scrollPane.revalidate();
+                    scrollPane.repaint();
                 }
             }
         });
 
-
+        
         
 
 
@@ -79,9 +121,10 @@ public class UserWindow
 
 
         frame.add(scrollPane, BorderLayout.CENTER);
-        frame.add(seriesPanel, BorderLayout.WEST);
+        frame.add(seriesMenuScrollPane, BorderLayout.WEST);
+        frame.add(topMenuePanel, BorderLayout.NORTH);
        
-
+        
         
         
         
@@ -102,12 +145,11 @@ public class UserWindow
         try
         {
             List<Post> posts = serverRequest.getPosts(1, null, SortBy.RANDOM);
-            String title = posts.get(0).title;
-            String content = posts.get(0).content;
-            String series = serverRequest.getSeriesInfo(posts.get(0).seriesID).name;
-            String username = serverRequest.getUserInfo(posts.get(0).userID).username;
+            
             postPanel.add(Box.createVerticalStrut(50));
-            postPanel.add(new PostPanel(title, content, series, "", username, ""));
+            postPanel.add(new PostPanel(posts.get(0), scrollPane, serverRequest));
+            
+            
 
 
         }

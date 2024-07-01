@@ -1,5 +1,7 @@
 import java.io.Serializable;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserEpisode implements Serializable
 {
@@ -63,5 +65,19 @@ public class UserEpisode implements Serializable
     }
 
 
+    public static List<Series> getJoinedSeries(User user, Connection connection) throws SQLException
+    {
+        List<Series> series = new ArrayList<>();
+        String sql = "SELECT * FROM userEpisode WHERE userID = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, user.id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) 
+            {
+                series.add(Series.getSeriesInfo(rs.getInt("seriesID"), connection));
+            }
 
+            return series;
+        }
+    }
 }
