@@ -18,6 +18,7 @@ public class PostPanel extends JPanel
     public Post post;
     public JScrollPane scrollPane;
     public ServerRequest serverRequest;
+    
 
     PostPanel(Post post, JScrollPane scrollPane, ServerRequest serverRequest) throws Exception
     {
@@ -140,6 +141,8 @@ public class PostPanel extends JPanel
                 }
                 
             }
+
+            
         });
         
         
@@ -155,6 +158,8 @@ public class PostPanel extends JPanel
             
             frame.add(new DetailedPostPanel(post, scrollPane, serverRequest), BorderLayout.CENTER);
             
+            scrollPane.revalidate();
+            scrollPane.repaint();
             frame.revalidate();
             frame.repaint();
             

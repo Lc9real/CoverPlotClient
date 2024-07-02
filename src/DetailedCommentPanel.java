@@ -111,6 +111,7 @@ public class DetailedCommentPanel extends JScrollPane
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         parentScrollPane.setVisible(true);
         frame.remove(this);
+        frame.add(parentScrollPane);
         parentScrollPane.revalidate();
         parentScrollPane.repaint();
         frame.revalidate();

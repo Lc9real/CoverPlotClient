@@ -19,6 +19,7 @@ public class UserWindow
     public static JScrollPane scrollPane;
     private static Color lineColor = Color.GREEN;
     private static Color backgroundColor = Color.BLACK;
+    private static User user;
 
     public static void main(String[] args) throws Exception
     {   
@@ -28,7 +29,7 @@ public class UserWindow
         System.out.println("Connected to Server :)");
         serverRequest = new ServerRequest(socket);
         
-        // TODO : Create the Series Panel
+        
         
 
         JPanel seriesMenuPanel = new JPanel();
@@ -51,7 +52,13 @@ public class UserWindow
         JPanel topMenuePanel = new JPanel();
         topMenuePanel.setBackground(Color.blue);
         topMenuePanel.setPreferredSize(new Dimension(300, 50));
-        
+        topMenuePanel.setLayout(new BoxLayout(topMenuePanel, BoxLayout.X_AXIS));
+
+        topMenuePanel.add(new SearchbarPanel(), JPanel.CENTER_ALIGNMENT);
+
+
+
+
         postPanel = new JPanel();
         postPanel.setLayout(new BoxLayout(postPanel, BoxLayout.Y_AXIS));
         
@@ -66,7 +73,6 @@ public class UserWindow
         // TODO : Add Search
         // TODO : Add Image Posts
         // TODO : Fix all Try statements and add Error statements
-        // TODO : Fix buge when Closing comment/post resizing bugs out
 
 
 

@@ -140,7 +140,7 @@ public class DetailedPostPanel extends JScrollPane
         
         frame.remove(this);
         parentScrollPane.setVisible(true);
-
+        frame.add(parentScrollPane);
         parentScrollPane.revalidate();
         parentScrollPane.repaint();
        
