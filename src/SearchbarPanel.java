@@ -1,27 +1,33 @@
 
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-public class SearchbarPanel extends JPanel
+public class SearchbarPanel extends JPanel 
 {
-
     private Color lineColor = Color.GREEN;
     private Color backgroundColor = Color.BLACK;
 
+    public SearchbarPanel() {
+        setLayout(new BorderLayout());
+        setBackground(backgroundColor);
 
-    public SearchbarPanel() 
-    {
-        // TODO : Search bar
-        JTextField textField = new JTextField(32);
-        textField.setBackground(backgroundColor);
-        textField.setForeground(lineColor);
-        textField.setBorder(new RoundedBorder(20));
+        // Create the search text field
+        JTextField searchField = new JTextField("Enter text...", 30);
+        searchField.setLayout(new BorderLayout());
+        JLabel label = new JLabel("icon");
+        label.setCursor(Cursor.getDefaultCursor());
+        searchField.add(label, BorderLayout.LINE_END);
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                searchField.setText("");
+            }
+        });
 
-        textField.setPreferredSize(new Dimension(300, 30));
-
-        this.add(textField);
+       this.add(searchField);
     }
+
+   
     
 }

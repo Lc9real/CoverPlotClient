@@ -2,7 +2,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.*;
 import java.net.Socket;
 import java.util.List;
 import javax.swing.*;
@@ -38,12 +37,7 @@ public class UserWindow
         seriesMenuPanel.setPreferredSize(new Dimension(200, 300));
         seriesMenuPanel.setLayout(new BoxLayout(seriesMenuPanel, BoxLayout.Y_AXIS));
 
-        List<Series> joinedSeries = serverRequest.getJoinedSeries();
-        for(Series series: joinedSeries)
-        {
-            seriesMenuPanel.add(Box.createVerticalStrut(15));
-            seriesMenuPanel.add(new SeriesPanel(series));
-        }
+        
 
         JScrollPane seriesMenuScrollPane = new JScrollPane(seriesMenuPanel);
 
@@ -51,7 +45,7 @@ public class UserWindow
 
         JPanel topMenuePanel = new JPanel();
         topMenuePanel.setBackground(Color.blue);
-        topMenuePanel.setPreferredSize(new Dimension(300, 50));
+        topMenuePanel.setPreferredSize(new Dimension(800, 50));
         topMenuePanel.setLayout(new BoxLayout(topMenuePanel, BoxLayout.X_AXIS));
 
         topMenuePanel.add(new SearchbarPanel(), JPanel.CENTER_ALIGNMENT);
@@ -59,10 +53,7 @@ public class UserWindow
 
 
 
-        postPanel = new JPanel();
-        postPanel.setLayout(new BoxLayout(postPanel, BoxLayout.Y_AXIS));
         
-        postPanel.setBackground(Color.BLACK);
 
 
         // TODO : Create User Login
@@ -73,43 +64,21 @@ public class UserWindow
         // TODO : Add Search
         // TODO : Add Image Posts
         // TODO : Fix all Try statements and add Error statements
+        // TODO : Add Votes
 
 
 
 
+        scrollPane = new postScrollPane(serverRequest);
+        postPanel = (JPanel)scrollPane.getViewport().getView();
 
-        scrollPane = new JScrollPane(postPanel);
+        List<Series> joinedSeries = serverRequest.getJoinedSeries();
+        for(Series series: joinedSeries)
+        {
+            seriesMenuPanel.add(Box.createVerticalStrut(15));
+            seriesMenuPanel.add(new SeriesPanel(series, scrollPane, serverRequest));
+        }
         
-
-
-        spawnInitialPosts();
-
-
-
-        scrollPane.setBounds(0, 10, 550, 550);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
-        verticalScrollBar.setUnitIncrement(20); // Increase unit increment
-        verticalScrollBar.setBlockIncrement(10); // Increase block increment
-
-        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-            @Override
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                JScrollBar scrollBar = (JScrollBar) e.getSource();
-                int extent = scrollBar.getModel().getExtent();
-                int maximum = scrollBar.getModel().getMaximum();
-                int value = scrollBar.getValue() + extent;
-
-                // Load more posts when scrollbar is near the bottom
-                if (value >= maximum - 200 && scrollPane.isVisible()) {
-                    spawnNewPost();
-                    postPanel.revalidate();
-                    postPanel.repaint();
-                    scrollPane.revalidate();
-                    scrollPane.repaint();
-                }
-            }
-        });
 
         
         
@@ -136,35 +105,7 @@ public class UserWindow
         
     }
 
-    public static void spawnInitialPosts()
-    {
-        spawnNewPost();
-        spawnNewPost();
-        spawnNewPost();
-        spawnNewPost();
-        spawnNewPost();
-        spawnNewPost();
-    }
-
-    public static void spawnNewPost()
-    {
-        try
-        {
-            List<Post> posts = serverRequest.getPosts(1, null, SortBy.RANDOM);
-            
-            postPanel.add(Box.createVerticalStrut(50));
-            postPanel.add(new PostPanel(posts.get(0), scrollPane, serverRequest));
-            
-            
-
-
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        
-    }
+    
 
     
 }
